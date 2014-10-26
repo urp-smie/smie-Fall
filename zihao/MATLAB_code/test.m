@@ -1,23 +1,52 @@
-[X,Y,Z]=peaks(30);
-
-surf(X,Y,Z)
-
-axis([-3,3,-3,3,-10,10])
-
-axis off
-
-shading interp
-
-colormap(hot)
-
-M=moviein(20);          %建立一个20列的大矩阵
-
-for i=1:20
-
-view(-37.5+24*(i-1),30)    %改变视点
-
-M(:,i)=getframe;           %将图形保存到M矩阵
-
+start_time=34;
+time_windows=8;
+N=125;
+length=37500;
+t=0:1/125:300-1/125;
+ECG=sig(1,1:length+N);
+x=sig(2,1:length+N);
+e1=sig(4,1:length+N);
+e2=sig(5,1:length+N);
+e3=sig(6,1:length+N);
+w=zeros(1,N);
+E=zeros(1,length);
+u=0.00774;
+for i=N:length+N
+    y1(i)=x(i)-e1(i-N+1:i)*w';
+    w=w+u*e1(i-N+1:i)*y1(i);
+    E(i)=e1(i)*e1(i);
 end
+w=zeros(1,N);
+E=zeros(1,length);
+u=0.00174;
+for i=1:length
+    y2(i)=x(i:i+N-1)*w';
+    w=w+2*u*e2(i)*x(i:i+N-1);
+    E(i)=e2(i)*e2(i);
+end
+w=zeros(1,N);
+E=zeros(1,length);
+u=0.00174;
+for i=1:length
+    y3(i)=x(i:i+N-1)*w';
+    w=w+u*e3(i)*x(i:i+N-1);
+    E(i)=e3(i)*e3(i);
+end
+figure
+subplot(5,1,1)
+plot(t,ECG(1:37500))
+xlim([start_time,start_time+time_windows])
+subplot(5,1,2)
+plot(t,x(1:37500))
+xlim([start_time,start_time+time_windows])
+subplot(5,1,3)
+t1=0:1/125:300+1-1/125;
+plot(t1,y1)
+xlim([start_time,start_time+time_windows])
+subplot(5,1,4)
 
-movie(M,2)              %播放画面2次
+plot(t,y2)
+xlim([start_time,start_time+time_windows])
+subplot(5,1,5)
+plot(t,y3)
+xlim([start_time,start_time+time_windows])

@@ -1,4 +1,4 @@
-function accelerometer_Rawdatagram_8s(tar_raw_array,time_start,time_windows)
+function accelerometer_Rawdatagram(tar_raw_array,time_start,time_windows)
 figure;
 TIME_axis=[0:0.008:303.488];
 subplot(3,1,1)

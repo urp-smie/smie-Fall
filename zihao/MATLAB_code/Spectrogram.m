@@ -1,14 +1,14 @@
-function Spectrogram(tar_array,time_start,gstext)
+%画频谱图 最简单的，参数为：数据横向量，项目名，时间窗口
+function Spectrogram(tar_array,time_start,time_windows,gstext)
 
 figure
 subplot(3,1,1)
-
-t=0:1/125:8;%采样窗口 8s
+t=0:1/125:time_windows;%采样窗口 8s
 N=length(t); %样点个数
-y=tar_array(1+time_start*125:N+time_start*125);%从time_start开始的10s的点
+y=tar_array(1+time_start*125:N+time_start*125);%从time_start开始的8s的点
 y=y-mean(y); %去除直流分量
 plot(t,y);
-title(strcat('从第',num2str(time_start),'s开始的8s时间窗口',gstext,'原始时域波形')) 
+title(strcat('从第',num2str(time_start),'s开始的',num2str(time_windows),'s时间窗口',gstext,'原始时域波形')) 
 fs=125;%采样频率
 
 df=fs/(N-1);%分辨率
