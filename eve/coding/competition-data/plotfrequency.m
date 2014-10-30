@@ -6,8 +6,9 @@ function [ ] = plotfrequency( sig, start, tail ,fs)
 
 
 %ECG
-cut = 8;
+cut = 16;
 y = sig(1,start*125+1:tail*125+1);
+y = y-mean(y);
 len = length(y);
 Y = fft(y,len)/len*2;
 df = fs/(len-1);
@@ -17,12 +18,14 @@ plot(f(1:len/cut),abs(Y(1:len/cut)));
 title('ECG spectrum');
 %PPG1
 y = sig(2,start*125+1:tail*125+1);
+y = y-mean(y);
 Y = fft(y,len)/len*2;
 subplot(3,1,2);
 plot(f(1:len/cut),abs(Y(1:len/cut)));
 title('PPG1 spectrum');
 %PPG2
 y = sig(3,start*125+1:tail*125+1);
+y = y-mean(y);
 Y = fft(y,len)/len*2;
 subplot(3,1,3);
 plot(f(1:len/cut),abs(Y(1:len/cut)));

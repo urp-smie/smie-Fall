@@ -17,15 +17,44 @@
 % 
 % load data from matrix
 load DATA_01_TYPE01.mat 'sig'
+load DATA_01_TYPE01_BPMtrace.mat 'BPM0'
 fs = 125;
-start = 120;
-tail = 128;
-%plot time domain
-figure(1);
-plottime(sig,start,tail);
-%plot spectrum
-figure(2);
-plotfrequency(sig,start,tail,fs);
-%period detection
-%T = period_detection(sig,start,tail,fs);
+start = 0;
+tail = 8;
+n = fs*(tail-start)+1;
+ecg = zeros(1,n);
+ppg = zeros(1,n);
+dppg = zeros(1,n-1);
+duration = 8;
+referCycle = 0.85;
+
+%test
+% figure(1);
+% i = 42;
+% referCycle = 0.67;
+% [ecg, ppg, dppg, testrate, testcycle] = plotdPPG(sig,i,i+8,referCycle);
+
+%calculate average heart rate
+% figure(2);
+[m k] = size(sig);
+seconds = floor(k/fs);
+if mod(seconds,2) ~= 0
+    seconds = seconds-1;
+end
+total = (seconds-8)/2+1;
+rate = zeros(total,1);
+cycle = zeros(total,1);
+difference = zeros(total,1);
+j=1;
+for i=0:2:seconds-8
+    [ecg, ppg, dppg, rate(j), cycle(j)] = plotdPPG(sig,i,i+duration,referCycle);
+    difference(j) = abs(rate(j)-BPM0(j));
+    j = j+1;
+end
+
+maxdif = max(difference);
+mindif = min(difference);
+average = mean(difference);
+%calculate average heart rate
+
 
