@@ -1,4 +1,4 @@
-function [ecg, ppg, dppg, rate, averageCycle] = plotdPPG( sig, start, tail, referCycle, test )
+function [ecg, ppg, dppg, rate, averageCycle] = plotdPPG( sig, start, tail, referCycle )
 %   process PPG wave
 %   the higest heart rate is 166.8432
 %   the lowest heart rate is 69.5160
@@ -6,7 +6,7 @@ fs = 125;
 t = start:1/fs:tail;
 len = length(t);
 total = 3;
-peakbound = 1.5;
+peakbound = 2;
 excess = 1.1;
 mincycle = 0.35;
 %maxcycle = 0.9;
@@ -15,11 +15,11 @@ mincycle = 0.35;
 %ECG
 y = sig(1,start*fs+1:tail*fs+1);
 ecg = y;
-%plot.........................
+%y = smooth(y);
 subplot(total,1,1);
 plot(t,y);
 title('ECG');
-%plot.........................
+
 %PPG1
 y = sig(2,start*fs+1:tail*fs+1);
 y = smooth(y)';
@@ -42,13 +42,10 @@ for i=2:len-2
     end
 end
 
-%plot.........................
 %plot PPG
 subplot(total,1,2);
 plot(t,y);
 title('PPG1-smooth1');hold on;
-%plot.........................
-
 maxpoint = max(y);
 minipoint = min(y);
 n=1;
@@ -66,13 +63,10 @@ for k=1:j-1
         end
     end
 end
-
-%plot.........................
 %plot lines
 for k=1:n-1
     plot([startpoint(k),startpoint(k)],[minipoint*excess,maxpoint*excess]);hold on;
 end
-%plot.........................
 
 %merge some small cycle
 %bpm<100, 0.6<rate
@@ -124,11 +118,9 @@ while k<=n-1
         else
             mincycle = ave*control(3);
     end
-    end
+end
 end
 
-
-%plot.........................
 %plot new PPG 
 for k=1:count-1
     plot([final(k),final(k)],[minipoint*excess,maxpoint*excess],'r');hold on;
@@ -144,7 +136,6 @@ minipoint = min(dppg);
 for k=1:j-1
     plot([peak(k),peak(k)],[minipoint*excess,maxpoint*excess]);hold on;
 end
-%plot.........................
 
 %calculate average cycle time
 averageCycle = mean(cycle(2:cyclecount-1));
