@@ -18,8 +18,8 @@
 % load data from matrix
 %
 %plot all data
-load DATA_01_TYPE01.mat 'sig'
-load DATA_01_TYPE01_BPMtrace.mat 'BPM0'
+load DATA_05_TYPE2.mat 'sig'
+load DATA_05_TYPE2_BPMtrace.mat 'BPM0'
 fs = 125;
 start = 0;
 tail = 8;
@@ -47,9 +47,14 @@ for i=0:2:seconds-8
     referCycle = cycle(j);
     j = j+1;
 end
+%rate = smooth(rate);
+len = size(BPM0);
+i=1:len;
+figure(3);
+plot(i,BPM0,'r',i,rate);
+legend('BPM0','evaluated heart rate');
+grid on;
 
-maxdif = max(difference);
-mindif = min(difference);
 average = mean(difference);
 %calculate average heart rate
 

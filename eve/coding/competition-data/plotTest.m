@@ -32,7 +32,8 @@ referCycle = 0.85;
 
 %test
 figure(1);
-i = 42;
+second = 28;
+i = 2*(second-1);
 referCycle = 0.67;
 [ecg, ppg, dppg, testrate, testcycle] = plotdPPG(sig,i,i+8,referCycle);
 
